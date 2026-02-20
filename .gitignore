@@ -40,17 +40,17 @@ venv.bak/
 *.swo
 *~
 
-# # Data (keep structure, ignore large files)
-# data/raw/*.fasta
-# data/processed/*.csv
-# data/splits/*.csv
-# *.h5
-# *.hdf5
+# Data (keep structure, ignore large files)
+data/raw/*.fasta
+data/processed/*.csv
+data/splits/*.csv
+*.h5
+*.hdf5
 
-# # Models
-# results/models/*.pt
-# results/models/*.pth
-# results/models/*.bin
+# Models
+results/models/*.pt
+results/models/*.pth
+results/models/*.bin
 
 
 # OS
