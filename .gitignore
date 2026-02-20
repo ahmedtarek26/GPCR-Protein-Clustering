@@ -52,9 +52,7 @@ results/figures/*.png
 results/
 
 # Models
-results/models/*.pt
-results/models/*.pth
-results/models/*.bin
+models/
 
 
 # OS
