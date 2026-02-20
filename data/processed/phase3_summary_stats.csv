@@ -1,2 +1,0 @@
-total_sequences_analyzed,mean_identity,median_identity,std_identity,min_identity,max_identity,very_high_similarity_95plus,high_similarity_85to95,moderate_similarity_70to85,low_similarity_50to70,very_low_similarity_below50
-1483,42.657135531944185,33.46456692913386,22.780175925094444,8.61111111111111,100.0,29,112,103,174,1065
