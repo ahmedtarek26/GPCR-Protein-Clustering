@@ -41,11 +41,7 @@ venv.bak/
 *~
 
 # Data (keep structure, ignore large files)
-data/raw/*.fasta
-data/processed/*.csv
-data/splits/*.csv
-*.h5
-*.hdf5
+data/
 
 # Figures
 results/figures/*.png
