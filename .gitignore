@@ -43,6 +43,8 @@ venv.bak/
 # Data (keep structure, ignore large files)
 data/
 
+results/prot2func_gpcr_output/*
+
 # Figures
 results/figures/*.png
 results/
