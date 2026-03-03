@@ -24,7 +24,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, EsmModel
 BASE_DIR = Path(__file__).parent
 DATA_DIR = BASE_DIR / "data" / "processed"
 
-MULTIMODAL_CSV = DATA_DIR / "final_multimodal_clusters.csv"
+MULTIMODAL_CSV = DATA_DIR / "final_multimodal_clusters_v2.csv"
 SEQ_EMB_CSV    = DATA_DIR / "embedding_sequences_mean_pooling.csv"
 
 ESM_MODEL_ID = "facebook/esm2_t33_650M_UR50D"
