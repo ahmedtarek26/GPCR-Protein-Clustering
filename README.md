@@ -1,63 +1,55 @@
-# GPCR Functional Clustering 
-## Computational Genomics & NLP Analysis
+# GPCR Protein clustering
 
----
+This project groups GPCR proteins using both:
+- sequence embeddings (ESM2)
+- text information (real metadata + generated descriptions for rows without text data in uniprot)
 
-## Research Question
+The goal : put proteins with similar biology closer together.
 
-**"What is the relationship between sequence alignment percentage and functional similarity in G-protein coupled receptors (GPCRs)?"**
+## Quick Start
 
-### Key Objectives:
+1. Install dependencies:
+	```bash
+	pip install -r requirements.txt
+	```
+2. All work in notebooks section, separated depending on the task.
+3. Main outputs are saved in:
+	- `data/processed/`
+	- `results/prot2func_gpcr_output_v3/`
 
+## Project Flow
 
----
+- Data exploration
+- Extracting text data
+- Load labeled and unlabeled GPCR proteins
+- Build sequence and text embeddings
+- Fuse distances (sequence + text)
+- Cluster proteins with HDBSCAN
+- Visualize clusters with UMAP
 
-## Methodology Overview
+Main result files:
+- `data/processed/final_multimodal_clusters_v2.csv`
+- `results/prot2func_gpcr_output_v3/clustered_predictions.csv`
 
-
-
----
-
-## Project Structure
-
-```
-gpcr-clustering/
-│
-├── data/
-│   ├── raw/
-│   │   └── beta1.fasta                          # Original BLAST results
-│   │
-│   ├── processed/
-│   │
-│   └── splits/
-│
-├── notebooks/
-│   ├── 01_data_exploration.ipynb        
-│   ├── 02_label_extraction.ipynb          
-│   ├── 03_Embedding_and_subfamily_clustering.ipynb     
-│
-├── figures/                             # Generated visualizations
-├── README.md                            # This file
-└── requirements.txt                     # Dependencies
-
-```
-
----
-
-## Project steps
-
----
-
-## Final Results
-
-
----
-
-## Future work
-
----
 ## Resources
 
+- Data source: UniProt
+- Core models: ESM2, Sentence-BERT, Flan-T5
+- Core libraries: PyTorch, Transformers, scikit-learn, hdbscan, umap-learn, pandas
 
+### Reference papers
 
----
+- ESM2 mean-pooling reference paper   
+	https://academic.oup.com/bib/article/26/4/bbaf434/8242608
+- MSA Transformer (ICML, 2021)  
+	https://proceedings.mlr.press/v139/rao21a.html
+- Prot2Text: Multimodal Protein Function Generation (AAAI 2024)  
+	https://arxiv.org/abs/2311.16453
+- LLaVA: Visual Instruction Tuning (NeurIPS 2023)  
+	https://arxiv.org/abs/2304.08485
+- Prefix-Tuning: Optimizing Continuous Prompts for Generation (ACL 2021)  
+	https://arxiv.org/abs/2101.00190
+- LoRA: Low-Rank Adaptation of Large Language Models (ICLR 2022)  
+	https://arxiv.org/abs/2106.09685
+- Embedding-based protein sequence alignment with clustering and double dynamic programming (Scientific Reports, 2025)  
+	https://www.nature.com/articles/s41598-025-23319-x
