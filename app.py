@@ -3,7 +3,7 @@ GPCR Protein Classification — Streamlit Web App
 ================================================
 Enter a protein sequence and ask any biological question.
 The app embeds the sequence with ESM-2, retrieves the most similar
-known GPCRs, and feeds the cluster knowledge base into TinyLlama to
+known GPCRs, and feeds the cluster knowledge base into Phi-3 to
 answer your question.
 """
 
@@ -28,7 +28,7 @@ MULTIMODAL_CSV = DATA_DIR / "final_multimodal_clusters.csv"
 SEQ_EMB_CSV    = DATA_DIR / "embedding_sequences_mean_pooling.csv"
 
 ESM_MODEL_ID = "facebook/esm2_t33_650M_UR50D"
-LLM_MODEL_ID = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+LLM_MODEL_ID = "microsoft/Phi-3-mini-4k-instruct"
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -98,7 +98,7 @@ def load_esm():
     return mdl, tok
 
 
-@st.cache_resource(show_spinner="Loading TinyLlama language model…")
+@st.cache_resource(show_spinner="Loading Phi-3 language model…")
 def load_llm():
     tok = AutoTokenizer.from_pretrained(LLM_MODEL_ID)
     mdl = AutoModelForCausalLM.from_pretrained(
@@ -205,10 +205,7 @@ def build_rag_context(neighbors, cluster_kb):
 def llm_answer(context: str, question: str, neighbors: list, cluster: int,
                confidence: float, cluster_kb: dict,
                llm_model, llm_tokenizer, max_new_tokens: int = 250) -> str:
-    """
-    Ask TinyLlama for a concise interpretation paragraph.
-    We pass a compact, focused prompt — not the full raw context dump.
-    """
+ 
     kb = cluster_kb.get(cluster, {})
     cluster_label = "NOISE / unclassified" if cluster == -1 else f"Cluster {cluster}"
     kws       = ', '.join(kb.get('keywords', [])[:10]) or 'N/A'
@@ -235,7 +232,7 @@ def llm_answer(context: str, question: str, neighbors: list, cluster: int,
         "1. Describes its likely biological role and signalling mechanism.\n"
         "2. Mentions the most similar known proteins.\n"
         "3. Notes any relevant pharmacological or disease significance if inferable.\n"
-        "Write in a professional but accessible style, like a knowledgeable AI assistant."
+        "Write in a professional but accessible style."
     )
 
     user_msg = (
@@ -245,11 +242,14 @@ def llm_answer(context: str, question: str, neighbors: list, cluster: int,
     )
 
     messages = [
-        {"role": "system", "content": system_msg},
-        {"role": "user",   "content": user_msg},
+        {"role": "user", "content": system_msg + "\n\n" + user_msg},
     ]
-    prompt = llm_tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-    inputs = llm_tokenizer(prompt, return_tensors="pt").to(next(llm_model.parameters()).device)
+    prompt = llm_tokenizer.apply_chat_template(
+        messages, tokenize=False, add_generation_prompt=True
+    )
+    inputs = llm_tokenizer(prompt, return_tensors="pt", truncation=True, max_length=3800).to(
+        next(llm_model.parameters()).device
+    )
     with torch.no_grad():
         out = llm_model.generate(
             **inputs,
@@ -272,11 +272,11 @@ st.set_page_config(
     layout="wide",
 )
 
-st.title("🧬 GPCR Protein Classification")
+st.title("🧬 GPCR Protein Clustering")
 st.markdown(
     "Enter an amino-acid sequence and a question. "
     "The app embeds your sequence with **ESM-2**, retrieves the nearest known GPCRs, "
-    "and answers your question using **TinyLlama** grounded in the cluster knowledge base."
+    "and answers your question using **Phi-3** grounded in the cluster knowledge base."
 )
 
 # ── Load everything (cached after first run) ───────────────────────────────────
@@ -296,8 +296,8 @@ with st.sidebar:
     st.markdown(f"**Known proteins:** {len(known_ids)}")
     st.markdown(f"**Clusters:** {len(cluster_kb)}")
     st.markdown("---")
-    st.markdown("**ESM-2 model:** `facebook/esm2_t33_650M_UR50D`")
-    st.markdown("**LLM:** `TinyLlama/TinyLlama-1.1B-Chat-v1.0`")
+    st.markdown("**ESM-2 model:** `ESM2`")
+    st.markdown("**LLM:** `Phi-3-mini-4k-instruct`")
 
 # ── Main form ──────────────────────────────────────────────────────────────────
 DEMO_SEQ = (
@@ -321,8 +321,7 @@ with col1:
 with col2:
     question_input = st.text_area(
         "Your question",
-        value="What GPCR family and subfamily does this protein belong to, and what is its likely function?",
-        height=200,
+        value="What is the highly probable biological function of this protein?",
         placeholder="Ask biological question about this sequence…",
     )
 
