@@ -27,9 +27,6 @@ The goal : put proteins with similar biology closer together.
 - Cluster proteins with HDBSCAN
 - Visualize clusters with UMAP
 
-Main result files:
-- `data/processed/final_multimodal_clusters_v2.csv`
-- `results/prot2func_gpcr_output_v3/clustered_predictions.csv`
 
 ## Resources
 
@@ -45,8 +42,6 @@ Main result files:
 	https://proceedings.mlr.press/v139/rao21a.html
 - Prot2Text: Multimodal Protein Function Generation (AAAI 2024)  
 	https://arxiv.org/abs/2311.16453
-- LLaVA: Visual Instruction Tuning (NeurIPS 2023)  
-	https://arxiv.org/abs/2304.08485
 - Prefix-Tuning: Optimizing Continuous Prompts for Generation (ACL 2021)  
 	https://arxiv.org/abs/2101.00190
 - LoRA: Low-Rank Adaptation of Large Language Models (ICLR 2022)  
